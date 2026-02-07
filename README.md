@@ -1,0 +1,32 @@
+<img width="1885" height="465" alt="image" src="https://github.com/user-attachments/assets/e50b4b53-ed7f-4af4-8edf-1ea7600d9d73" />
+
+
+
+<img width="1144" height="479" alt="image" src="https://github.com/user-attachments/assets/0b10163f-5d8b-44c8-9a57-539b87344489" />
+
+
+
+<img width="923" height="403" alt="image" src="https://github.com/user-attachments/assets/9c528529-5888-4f31-8d2f-ace3f7f819cc" />
+
+
+<img width="1334" height="423" alt="image" src="https://github.com/user-attachments/assets/a1f373dd-f55f-42e4-b16e-e493548e1b1a" />
+
+
+curl pod
+   ↓
+haproxy-service
+   ↓
+HAProxy pod
+   ↓
+tomcat-service
+   ↓
+Tomcat pods (round-robin)
+
+
+infra
+
+<img width="1858" height="778" alt="image" src="https://github.com/user-attachments/assets/27ac9146-d1bc-4b07-ad68-1937d8f3d3bd" />
+
+<img width="1858" height="778" alt="image" src="https://github.com/user-attachments/assets/01498ad4-4ac8-4ebc-9847-becec04a44fd" />
+
+
