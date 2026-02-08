@@ -1,48 +1,150 @@
-loom video :: https://www.loom.com/share/4bd95cbdf6e24fe7bac61065a9ed60bc
+Private EKS with Internal Application (Terraform + Kubernetes)
+📌 Project Summary
 
-<img width="1891" height="429" alt="image" src="https://github.com/user-attachments/assets/03f92b81-6455-4316-9a52-83b353fb6466" />
+This project demonstrates the design and deployment of a secure, private Amazon EKS cluster using Terraform, hosting an internal application stack (HAProxy + Tomcat) without exposing any public endpoints.
+
+The goal was to focus on security-first design, controlled access, and production-aligned architecture, rather than a public demo setup.
+
+🎥 Loom Walkthrough Video
+https://www.loom.com/share/4bd95cbdf6e24fe7bac61065a9ed60bc
+
+🧠 Design Approach
+
+I intentionally designed this solution around the following principles:
+
+Private by default
+No public EKS API endpoint and no public worker nodes
+
+Infrastructure as Code
+Entire infrastructure provisioned using Terraform
+
+Clear access boundaries
+Separate mechanisms for admin access, node access, and application access
+
+Internal-only applications
+HAProxy and Tomcat exposed using ClusterIP services only
+
+This mirrors how production Kubernetes environments are commonly designed.
+
+🏗️ Architecture Overview
+
+Key Architecture Decisions
+
+Custom AWS VPC with private subnets across two AZs
+
+Amazon EKS with private API endpoint only
+
+Worker nodes with no public IP addresses
+
+Dedicated Admin EC2 in the same VPC to manage the cluster
+
+AWS SSM used for node access instead of SSH
+
+HAProxy and Tomcat exposed via ClusterIP services
+
+⚙️ Infrastructure Provisioning (Terraform)
+
+Terraform was used to provision all AWS resources in a reproducible way.
+
+Resources Created
+
+VPC, private subnets, route tables
+
+NAT Gateway for outbound internet access
+
+Private Amazon EKS cluster
+
+Managed node group
+
+IAM roles for:
+
+EKS control plane
+
+Worker nodes
+
+SSM access
+
+📂 Terraform Folder Structure
 
 
-<img width="1885" height="465" alt="image" src="https://github.com/user-attachments/assets/e50b4b53-ed7f-4af4-8edf-1ea7600d9d73" />
+✅ Terraform Apply Output
 
 
-
-<img width="1144" height="479" alt="image" src="https://github.com/user-attachments/assets/0b10163f-5d8b-44c8-9a57-539b87344489" />
-
+🔒 Worker Nodes with Private IPs Only
 
 
-<img width="923" height="403" alt="image" src="https://github.com/user-attachments/assets/9c528529-5888-4f31-8d2f-ace3f7f819cc" />
+☸️ Kubernetes Application Deployment
+Backend – Tomcat
 
+Deployed using a Kubernetes Deployment
 
-<img width="1334" height="423" alt="image" src="https://github.com/user-attachments/assets/a1f373dd-f55f-42e4-b16e-e493548e1b1a" />
+2 replicas for high availability
 
+Exposed internally via a ClusterIP service
 
-curl pod
+Frontend – HAProxy
+
+Deployed as an internal load balancer
+
+Routes traffic to the Tomcat service
+
+Configuration managed via ConfigMap
+
+Exposed internally via a ClusterIP service
+
+🔁 Application Access Flow (Internal)
+
+Because the application is internal-only, access is validated from within the cluster.
+
+Client Pod
    ↓
-haproxy-service
+HAProxy Service
    ↓
-HAProxy pod
+HAProxy Pod
    ↓
-tomcat-service
+Tomcat Service
    ↓
-Tomcat pods (round-robin)
+Tomcat Pods (round-robin)
 
 
-infra
+This confirms correct internal routing without public exposure.
 
-<img width="1858" height="778" alt="image" src="https://github.com/user-attachments/assets/27ac9146-d1bc-4b07-ad68-1937d8f3d3bd" />
+🔐 Secure Access & Operations
+Admin Access
 
-<img width="1858" height="778" alt="image" src="https://github.com/user-attachments/assets/01498ad4-4ac8-4ebc-9847-becec04a44fd" />
+A dedicated Admin EC2 instance in the same VPC is used to:
+
+Run Terraform
+
+Execute kubectl commands
+
+This allows cluster administration without exposing the EKS API publicly.
+
+Node Access (No SSH)
+
+Worker nodes are accessed using AWS Systems Manager (SSM)
+
+No SSH keys
+
+No port 22
+
+IAM-based and fully audited access
 
 
-<img width="1132" height="755" alt="image" src="https://github.com/user-attachments/assets/d0b743cd-9e49-48f6-9b96-f71e26352fd5" />
-
-<img width="705" height="466" alt="Screenshot 2026-02-08 005750" src="https://github.com/user-attachments/assets/b68eb7e9-d571-41fd-8d16-1db3416ffcfc" />
-<img width="705" height="466" alt="Screenshot 2026-02-08 005750" src="https://github.com/user-attachments/assets/b68eb7e9-d571-41fd-8d16-1db3416ffcfc" />
 
 
-<img width="1868" height="802" alt="image" src="https://github.com/user-attachments/assets/63deac3c-34cc-49bc-abcd-d586621948b3" />
-<img width="1868" height="802" alt="image" src="https://github.com/user-attachments/assets/63deac3c-34cc-49bc-abcd-d586621948b3" />
+🏁 Conclusion
 
+This project demonstrates:
 
+Secure, private EKS architecture
 
+Practical use of Terraform for cloud infrastructure
+
+Internal Kubernetes service communication
+
+Clear separation of access responsibilities
+
+IAM-driven, audit-friendly operational access
+
+Overall, the solution reflects a production-oriented DevOps mindset, prioritizing security, clarity, and maintainability over convenience.
